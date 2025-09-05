@@ -1,0 +1,3565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="星座"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyApplicationBase"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WeekActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MonthActivity"
+            android:exported="false" />
+        <activity
+            android:name=".YearActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ConsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PairActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AlterActivity"
+            android:exported="false" />
+    </application>
+</manifest>
+package com.example.constellation;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
+public class YearActivity extends AppCompatActivity {
+    TextView tv_name, tv_date, tv_health, tv_love, tv_career, tv_finance, tv_info, tv_text;
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_year);  
+        tv_name = findViewById(R.id.tv_name);
+        tv_date = findViewById(R.id.tv_date);
+        tv_health = findViewById(R.id.tv_health);
+        tv_love = findViewById(R.id.tv_love);
+        tv_career = findViewById(R.id.tv_career);
+        tv_finance = findViewById(R.id.tv_finance);
+        tv_info = findViewById(R.id.tv_info);
+        tv_text = findViewById(R.id.tv_text);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String data = bundle.getString("信息");  
+        parseJsonDataAndShow(data);
+    }
+    public void parseJsonDataAndShow(String jsonStr) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonStr);  
+            String name = jsonObject.optString("name");
+            String date = jsonObject.optString("date");
+            String health = jsonObject.optString("health");
+            String love = jsonObject.optString("love");
+            String career = jsonObject.optString("career");
+            String finance = jsonObject.optString("finance");
+            tv_name.setText(name);
+            tv_date.setText(date);
+            tv_health.setText(health);
+            tv_love.setText(love);
+            tv_career.setText(career);
+            tv_finance.setText(finance);
+            String mima = jsonObject.optString("mima");  
+            try {
+                JSONObject jsonObject_mima = new JSONObject(mima);  
+                String info = jsonObject_mima.optString("info");
+                String text = jsonObject_mima.optString("text");
+                tv_info.setText(info);
+                tv_text.setText(text);
+            } catch (JSONException e) {
+                e.printStackTrace();  
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();  
+        }
+    }
+}
+package com.example.constellation;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
+public class WeekActivity extends AppCompatActivity {
+    TextView tv_name, tv_date, tv_health, tv_love, tv_work, tv_money;
+    @SuppressLint("MissingInflatedId")  
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_week);  
+        tv_name = findViewById(R.id.tv_name);
+        tv_date = findViewById(R.id.tv_date);
+        tv_health = findViewById(R.id.tv_health);
+        tv_love = findViewById(R.id.tv_love);
+        tv_work = findViewById(R.id.tv_work);
+        tv_money = findViewById(R.id.tv_money);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String data = bundle.getString("信息");  
+        parseJsonDataAndShow(data);  
+    }
+    public void parseJsonDataAndShow(String jsonStr) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonStr);  
+            String name = jsonObject.optString("name");
+            String date = jsonObject.optString("date");
+            String health = jsonObject.optString("health");
+            String love = jsonObject.optString("love");
+            String work = jsonObject.optString("work");
+            String money = jsonObject.optString("money");
+            tv_name.setText(name);
+            tv_date.setText(date);
+            tv_health.setText(health);
+            tv_love.setText(love);
+            tv_work.setText(work);
+            tv_money.setText(money);
+        } catch (JSONException e) {
+            e.printStackTrace();  
+        }
+    }
+}
+package com.example.constellation;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+public class UserInfoActivity extends AppCompatActivity {
+    TextView userinfo; 
+    Button logout, alter, delete; 
+    String DB_NAME = "userinfo.db"; 
+    MySQLiteOpenHelper helper; 
+    SQLiteDatabase db; 
+    @SuppressLint({"MissingInflatedId", "WrongViewCast"}) 
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_userinfo); 
+        alter = findViewById(R.id.alter); 
+        logout = findViewById(R.id.logout); 
+        delete = findViewById(R.id.delete); 
+        userinfo = findViewById(R.id.userinfo); 
+        helper = new MySQLiteOpenHelper(this, DB_NAME, null, 1); 
+        db = helper.getReadableDatabase(); 
+        UserInfo info = new UserInfo(db); 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String str_userinfo = bundle.getString("userinfo"); 
+        String str_username = bundle.getString("username"); 
+        userinfo.setText(str_userinfo); 
+        alter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent_user = new Intent(UserInfoActivity.this, AlterActivity.class);
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("username", str_username); 
+                intent_user.putExtras(bundle1);
+                startActivity(intent_user); 
+            }
+        });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent_user = new Intent(UserInfoActivity.this, LoginActivity.class);
+                startActivity(intent_user); 
+                Toast.makeText(UserInfoActivity.this, "退出成功", Toast.LENGTH_SHORT).show(); 
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                info.delete(str_username); 
+                Intent intent_user = new Intent(UserInfoActivity.this, LoginActivity.class);
+                startActivity(intent_user); 
+                Toast.makeText(UserInfoActivity.this, "注销成功", Toast.LENGTH_SHORT).show(); 
+            }
+        });
+    }
+}
+package com.example.constellation;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import java.util.ArrayList;
+import java.util.List;
+public class UserInfo {
+    SQLiteDatabase db;
+    String table_name = "userinfo_tb";
+    public UserInfo(SQLiteDatabase db) {
+        this.db = db;
+    }
+    public void insert(User user) {
+        ContentValues cv = new ContentValues();
+        cv.put("password", user.getpassword());
+        cv.put("username", user.getusername());
+        cv.put("age", user.getAge());
+        cv.put("constellation", user.getConstellation());
+        db.insert(table_name, null, cv);
+    }
+    public void update(User user) {
+        ContentValues cv = new ContentValues();
+        cv.put("password", user.getpassword());
+        cv.put("age", user.getAge());
+        cv.put("constellation", user.getConstellation());
+        db.update(table_name, cv, "username=?", new String[]{user.getusername()});
+    }
+    public void delete(String username) {
+        db.delete(table_name, "username=?", new String[]{username});
+    }
+    public List<User> queryAll(String username) {
+        List<User> list = new ArrayList<>();
+        Cursor cursor = db.query(table_name, null, "username=?", new String[]{username}, null, null, null);
+        while (cursor.moveToNext()) {
+            int uid = cursor.getInt(0);
+            String str_username = cursor.getString(1);
+            String str_password = cursor.getString(2);
+            String str_age = cursor.getString(3);
+            String str_constellation = cursor.getString(4);
+            list.add(new User(uid, str_username, str_password, str_age, str_constellation));
+        }
+        return list;
+    }
+    public boolean loginCheck(String username) {
+        Cursor cursor = db.query(table_name, null, "username=?", new String[]{username}, null, null, null);
+        return cursor.moveToNext(); 
+    }
+    public boolean loginVerify(String username, String password) {
+        Cursor cursor = db.query(table_name, null, "username=? and password=?", new String[]{username, password}, null, null, null);
+        return cursor.moveToNext(); 
+    }
+}
+package com.example.constellation;
+public class User {
+    private int uid;
+    private String username;
+    private String password;
+    private String age;
+    private String constellation;
+    public User() {
+    }
+    public User(String username, String password, String age, String constellation) {
+        this.username = username;
+        this.password = password;
+        this.age = age;
+        this.constellation = constellation;
+    }
+    public User(int uid, String username, String password, String age, String constellation) {
+        this.uid = uid;
+        this.username = username;
+        this.age = age;
+        this.constellation = constellation;
+    }
+    public int getUid() {
+        return uid;
+    }
+    public void setusername(int uid) {
+        this.uid = uid;
+    }
+    public String getusername() {
+        return username;
+    }
+    public void setusername(String username) {
+        this.username = username;
+    }
+    public String getpassword() {
+        return password;
+    }
+    public void setpassword(String password) {
+        this.password = password;
+    }
+    public String getAge() {
+        return age;
+    }
+    public void setAge(String age) {
+        this.age = age;
+    }
+    public String getConstellation() {
+        return constellation;
+    }
+    public void setConstellation(String constellation) {
+        this.constellation = constellation;
+    }
+        @Override
+    public String toString() {
+        return  "用户名："+username+"\n"+
+                "性    别："+age+"\n"+
+                "星    座："+constellation;
+    }
+}
+package com.example.constellation;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+public class RegisterActivity extends AppCompatActivity {
+    EditText username, password, age, constellation;
+    Button register;
+    String DB_NAME = "userinfo.db";
+    MySQLiteOpenHelper helper;
+    SQLiteDatabase db;
+    @SuppressLint("MissingInflatedId") 
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState); 
+        setContentView(R.layout.activity_register); 
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        age = findViewById(R.id.age);
+        constellation = findViewById(R.id.constellation);
+        register = findViewById(R.id.register);
+        helper = new MySQLiteOpenHelper(this, DB_NAME, null, 1);
+        db = helper.getReadableDatabase();
+        UserInfo info = new UserInfo(db);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String str_username = username.getText().toString();
+                String str_password = password.getText().toString();
+                String str_age = age.getText().toString();
+                String str_constellation = constellation.getText().toString();
+                if (str_username.equals("") || str_password.equals("") || str_age.equals("") || str_constellation.equals("")) {
+                    Toast.makeText(RegisterActivity.this, "用户信息不能为空", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (info.loginCheck(str_username)) {
+                        Toast.makeText(RegisterActivity.this, "用户名已存在，请重新输入", Toast.LENGTH_SHORT).show();
+                    } else {
+                        info.insert(new User(str_username, str_password, str_age, str_constellation));
+                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+    }
+}
+package com.example.constellation;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
+public class PairActivity extends AppCompatActivity {
+    TextView tv_men, tv_women, tv_zhishu, tv_bizhong, tv_xiangyue, tv_tcdj, tv_jieguo, tv_lianai, tv_zhuyi;
+    @SuppressLint("MissingInflatedId") 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pair); 
+        tv_men = findViewById(R.id.tv_men);
+        tv_women = findViewById(R.id.tv_women);
+        tv_zhishu = findViewById(R.id.tv_zhishu);
+        tv_bizhong = findViewById(R.id.tv_bizhong);
+        tv_xiangyue = findViewById(R.id.tv_xiangyue);
+        tv_tcdj = findViewById(R.id.tv_tcdj);
+        tv_jieguo = findViewById(R.id.tv_jieguo);
+        tv_lianai = findViewById(R.id.tv_lianai);
+        tv_zhuyi = findViewById(R.id.tv_zhuyi);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String data = bundle.getString("信息"); 
+        parseJsonDataAndShow(data); 
+    }
+    public void parseJsonDataAndShow(String jsonStr) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonStr); 
+            String men = jsonObject.optString("men");
+            String women = jsonObject.optString("women");
+            String zhishu = jsonObject.optString("zhishu");
+            String bizhong = jsonObject.optString("bizhong");
+            String xiangyue = jsonObject.optString("xiangyue");
+            String tcdj = jsonObject.optString("tcdj");
+            String jieguo = jsonObject.optString("jieguo");
+            String lianai = jsonObject.optString("lianai");
+            String zhuyi = jsonObject.optString("zhuyi");
+            tv_men.setText(men);
+            tv_women.setText(women);
+            tv_zhishu.setText(zhishu);
+            tv_bizhong.setText(bizhong);
+            tv_xiangyue.setText(xiangyue);
+            tv_tcdj.setText(tcdj);
+            tv_jieguo.setText(jieguo);
+            tv_lianai.setText(lianai);
+            tv_zhuyi.setText(zhuyi);
+        } catch (JSONException e) {
+            e.printStackTrace(); 
+        }
+    }
+}
+package com.example.constellation;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import androidx.annotation.Nullable;
+public class MySQLiteOpenHelper extends SQLiteOpenHelper {
+    String CREATE_TABLE = "Create table userinfo_tb(uid integer primary key autoincrement,username varchar(50),password varchar(50),age varchar(50),constellation varchar(50))";
+    public MySQLiteOpenHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+    }
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_TABLE);
+        Log.d("sqlite", "创建数据库");
+    }
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    }
+}
+package com.example.constellation;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
+public class MonthActivity extends AppCompatActivity {
+    TextView tv_name, tv_date, tv_health, tv_love, tv_work, tv_money, tv_all;
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_month);
+        tv_name = findViewById(R.id.tv_name);
+        tv_date = findViewById(R.id.tv_date);
+        tv_health = findViewById(R.id.tv_health);
+        tv_love = findViewById(R.id.tv_love);
+        tv_work = findViewById(R.id.tv_work);
+        tv_money = findViewById(R.id.tv_money);
+        tv_all = findViewById(R.id.tv_all);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String data = bundle.getString("信息");
+        parseJsonDataAndShow(data);
+    }
+    public void parseJsonDataAndShow(String jsonStr) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            String name = jsonObject.optString("name");
+            String date = jsonObject.optString("date");
+            String health = jsonObject.optString("health");
+            String love = jsonObject.optString("love");
+            String work = jsonObject.optString("work");
+            String money = jsonObject.optString("money");
+            String all = jsonObject.optString("all");
+            tv_name.setText(name);
+            tv_date.setText(date);
+            tv_health.setText(health);
+            tv_love.setText(love);
+            tv_work.setText(work);
+            tv_money.setText(money);
+            tv_all.setText(all);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+}
+package com.example.constellation;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.Calendar;
+import java.util.List;
+public class MainActivity extends AppCompatActivity {
+    TextView tv_name, tv_QFriend, tv_color, test, username, tv;
+    Spinner sp_stars, sp_stars_cons, sp_men, sp_women;
+    DatePickerDialog.OnDateSetListener setListener;
+    String DB_NAME = "userinfo.db";
+    MySQLiteOpenHelper helper;
+    SQLiteDatabase db;
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        tv_name = findViewById(R.id.tv_name);
+        tv_QFriend = findViewById(R.id.tv_QFriend);
+        tv_color = findViewById(R.id.tv_color);
+        sp_stars = findViewById(R.id.sp_stars);
+        sp_stars_cons = findViewById(R.id.sp_stars_cons);
+        sp_men = findViewById(R.id.sp_men);
+        sp_women = findViewById(R.id.sp_women);
+        test = findViewById(R.id.test);
+        username = findViewById(R.id.username);
+        tv = findViewById(R.id.tv);
+        helper = new MySQLiteOpenHelper(this, DB_NAME, null, 1);
+        db = helper.getReadableDatabase();
+        UserInfo info = new UserInfo(db);
+        Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Dialog_MinWidth, setListener, year, month, day);
+                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                datePickerDialog.show();
+            }
+        });
+        setListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                String str_month = "";
+                String str_day = "";
+                month = month + 1;
+                if (month < 10) {
+                    str_month = "0" + month;
+                } else {
+                    str_month = "" + month;
+                }
+                if (dayOfMonth < 10) {
+                    str_day = "0" + dayOfMonth;
+                } else {
+                    str_day = "" + dayOfMonth;
+                }
+                String date = year + "-" + str_month + "-" + str_day;
+                tv.setText(date);
+            }
+        };
+    }
+    private Handler mHandler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                String strData = (String) msg.obj;
+                if (day.equals("今日") || day.equals("明日")) {
+                    Intent intent = new Intent(MainActivity.this, DayActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("信息", strData);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    Toast.makeText(MainActivity.this, "查询成功", Toast.LENGTH_SHORT).show();
+                } else if (day.equals("一周")) {
+                    Intent intent = new Intent(MainActivity.this, WeekActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("信息", strData);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    Toast.makeText(MainActivity.this, "查询成功", Toast.LENGTH_SHORT).show();
+                } else if (day.equals("本月")) {
+                    Intent intent = new Intent(MainActivity.this, MonthActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("信息", strData);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    Toast.makeText(MainActivity.this, "查询成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, YearActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("信息", strData);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    Toast.makeText(MainActivity.this, "查询成功", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    };
+    private Handler mHandler_cons = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                String strData = (String) msg.obj;
+                try {
+                    JSONObject jsonObject = new JSONObject(strData);
+                    String result = jsonObject.optString("result");
+                    Intent intent = new Intent(MainActivity.this, ConsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("信息", result);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    Toast.makeText(MainActivity.this, "查询成功", Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    };
+    private Handler mHandler_pair = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                String strData = (String) msg.obj;
+                try {
+                    JSONObject jsonObject = new JSONObject(strData);
+                    String result = jsonObject.optString("result");
+                    Intent intent = new Intent(MainActivity.this, PairActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("信息", result);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    Toast.makeText(MainActivity.this, "查询成功", Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    };
+    public void start(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String stringFromNet = getStringFromNet(); 
+                Message message = new Message();
+                message.what = 0;
+                message.obj = stringFromNet;
+                mHandler.sendMessage(message); 
+            }
+        }).start();
+    }
+    public void start_cons(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String stringCons = getStringCons(); 
+                Message message = new Message();
+                message.what = 0;
+                message.obj = stringCons;
+                mHandler_cons.sendMessage(message);
+            }
+        }).start();
+    }
+    public void start_pair(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String stringPair = getStringPair(); 
+                Message message = new Message();
+                message.what = 0;
+                message.obj = stringPair;
+                mHandler_pair.sendMessage(message);
+            }
+        }).start();
+    }
+    String day;
+    private String getStringFromNet() {
+        String constellation = sp_stars_cons.getSelectedItem().toString(); 
+        day = sp_stars.getSelectedItem().toString(); 
+        String day_type = ""; 
+        if (day.equals("今日")) {
+            day_type = "today";
+        } else if (day.equals("明日")) {
+            day_type = "tomorrow";
+        } else if (day.equals("一周")) {
+            day_type = "week";
+        } else if (day.equals("本月")) {
+            day_type = "month";
+        } else if (day.equals("今年")) {
+            day_type = "year";
+        }
+        return API.doGet(constellation, day_type); 
+    }
+    private String getStringCons() {
+        String date = tv.getText().toString(); 
+        return API.doGetCons(date); 
+    }
+    private String getStringPair() {
+        String men = sp_men.getSelectedItem().toString(); 
+        String women = sp_women.getSelectedItem().toString(); 
+        return API.doGetPair(men, women); 
+    }
+    public void goUserInfo(View view) {
+        UserInfo info = new UserInfo(db); 
+        Intent intent = getIntent(); 
+        Bundle bundle = intent.getExtras(); 
+        String str_username = bundle.getString("username"); 
+        List<User> list = info.queryAll(str_username); 
+        StringBuffer sb = new StringBuffer();
+        sb.append(list.get(0).toString()); 
+        Intent intent_userinfo = new Intent(MainActivity.this, UserInfoActivity.class); 
+        Bundle bundle1 = new Bundle();
+        bundle1.putString("username", str_username); 
+        bundle1.putString("userinfo", sb.toString()); 
+        intent_userinfo.putExtras(bundle1); 
+        startActivity(intent_userinfo); 
+    }
+}
+package com.example.constellation;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+public class LoginActivity extends AppCompatActivity {
+    EditText username, password;
+    Button login, register;
+    String DB_NAME = "userinfo.db";
+    MySQLiteOpenHelper helper;
+    SQLiteDatabase db;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        login = findViewById(R.id.login);
+        register = findViewById(R.id.register);
+        helper = new MySQLiteOpenHelper(this, DB_NAME, null, 1);
+        db = helper.getReadableDatabase();
+        UserInfo info = new UserInfo(db);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String str_username = username.getText().toString();
+                String str_password = password.getText().toString();
+                if (str_username.equals("") || str_password.equals("")) {
+                    Toast.makeText(LoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (info.loginVerify(str_username, str_password)) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("username", str_username);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+    }
+}
+package com.example.constellation;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
+public class DayActivity extends AppCompatActivity {
+    TextView tv_name, tv_QFriend, tv_color, tv_datetime, tv_health, tv_love, tv_work, tv_money, tv_number, tv_summary, tv_all;
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_day); 
+        tv_name = findViewById(R.id.tv_name);
+        tv_QFriend = findViewById(R.id.tv_QFriend);
+        tv_color = findViewById(R.id.tv_color);
+        tv_datetime = findViewById(R.id.tv_datetime);
+        tv_health = findViewById(R.id.tv_health);
+        tv_love = findViewById(R.id.tv_love);
+        tv_work = findViewById(R.id.tv_work);
+        tv_money = findViewById(R.id.tv_money);
+        tv_number = findViewById(R.id.tv_number);
+        tv_summary = findViewById(R.id.tv_summary);
+        tv_all = findViewById(R.id.tv_all);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String data = bundle.getString("信息");
+        parseJsonDataAndShow(data);
+    }
+    public void parseJsonDataAndShow(String jsonStr) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            String name = jsonObject.optString("name");
+            String QFriend = jsonObject.optString("QFriend");
+            String color = jsonObject.optString("color");
+            String datetime = jsonObject.optString("datetime");
+            String health = jsonObject.optString("health");
+            String love = jsonObject.optString("love");
+            String work = jsonObject.optString("work");
+            String money = jsonObject.optString("money");
+            String number = jsonObject.optString("number");
+            String summary = jsonObject.optString("summary");
+            String all = jsonObject.optString("all");
+            tv_name.setText(name);
+            tv_QFriend.setText(QFriend);
+            tv_color.setText(color);
+            tv_datetime.setText(datetime);
+            tv_health.setText(health);
+            tv_love.setText(love);
+            tv_work.setText(work);
+            tv_money.setText(money);
+            tv_number.setText(number);
+            tv_summary.setText(summary);
+            tv_all.setText(all);
+        } catch (JSONException e) {
+            e.printStackTrace(); 
+        }
+    }
+}
+package com.example.constellation;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity; 
+import org.json.JSONException;
+import org.json.JSONObject; 
+public class ConsActivity extends AppCompatActivity {
+    TextView tv_range, tv_name, tv_zxtd, tv_sssx, tv_zggw, tv_yysx, tv_zdtz, tv_zgxx, tv_xyys, tv_jssw, tv_xyhm, tv_kyjs, tv_bx, tv_yd, tv_qd, tv_jbtz, tv_jttz, tv_xsfg, tv_gxmd, tv_zj;
+    @SuppressLint("MissingInflatedId") 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState); 
+        setContentView(R.layout.activity_cons); 
+        tv_range = findViewById(R.id.tv_range);
+        tv_name = findViewById(R.id.tv_name);
+        tv_zxtd = findViewById(R.id.tv_zxtd);
+        tv_sssx = findViewById(R.id.tv_sssx);
+        tv_zggw = findViewById(R.id.tv_zggw);
+        tv_yysx = findViewById(R.id.tv_yysx);
+        tv_zdtz = findViewById(R.id.tv_zdtz);
+        tv_zgxx = findViewById(R.id.tv_zgxx);
+        tv_xyys = findViewById(R.id.tv_xyys);
+        tv_jssw = findViewById(R.id.tv_jssw);
+        tv_xyhm = findViewById(R.id.tv_xyhm);
+        tv_kyjs = findViewById(R.id.tv_kyjs);
+        tv_bx = findViewById(R.id.tv_bx);
+        tv_yd = findViewById(R.id.tv_yd);
+        tv_qd = findViewById(R.id.tv_qd);
+        tv_jbtz = findViewById(R.id.tv_jbtz);
+        tv_jttz = findViewById(R.id.tv_jttz);
+        tv_xsfg = findViewById(R.id.tv_xsfg);
+        tv_gxmd = findViewById(R.id.tv_gxmd);
+        tv_zj = findViewById(R.id.tv_zj);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String data = bundle.getString("信息"); 
+        parseJsonDataAndShow(data); 
+    }
+    public void parseJsonDataAndShow(String jsonStr) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            String range = jsonObject.optString("range");
+            String name = jsonObject.optString("name");
+            String zxtd = jsonObject.optString("zxtd");
+            String sssx = jsonObject.optString("sssx");
+            String zggw = jsonObject.optString("zggw");
+            String yysx = jsonObject.optString("yysx");
+            String zdtz = jsonObject.optString("zdtz");
+            String zgxx = jsonObject.optString("zgxx");
+            String xyys = jsonObject.optString("xyys");
+            String jssw = jsonObject.optString("jssw");
+            String xyhm = jsonObject.optString("xyhm");
+            String kyjs = jsonObject.optString("kyjs");
+            String bx = jsonObject.optString("bx");
+            String yd = jsonObject.optString("yd");
+            String qd = jsonObject.optString("qd");
+            String jbtz = jsonObject.optString("jbtz");
+            String jttz = jsonObject.optString("jttz");
+            String xsfg = jsonObject.optString("xsfg");
+            String gxmd = jsonObject.optString("gxmd");
+            String zj = jsonObject.optString("zj");
+            tv_range.setText(range);
+            tv_name.setText(name);
+            tv_zxtd.setText(zxtd);
+            tv_sssx.setText(sssx);
+            tv_zggw.setText(zggw);
+            tv_yysx.setText(yysx);
+            tv_zdtz.setText(zdtz);
+            tv_zgxx.setText(zgxx);
+            tv_xyys.setText(xyys);
+            tv_jssw.setText(jssw);
+            tv_xyhm.setText(xyhm);
+            tv_kyjs.setText(kyjs);
+            tv_bx.setText(bx);
+            tv_yd.setText(yd);
+            tv_qd.setText(qd);
+            tv_jbtz.setText(jbtz);
+            tv_jttz.setText(jttz);
+            tv_xsfg.setText(xsfg);
+            tv_gxmd.setText(gxmd);
+            tv_zj.setText(zj);
+        } catch (JSONException e) { 
+            e.printStackTrace(); 
+        }
+    }
+}
+package com.example.constellation;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+public class API {
+    public static String doGet(String constellation, String day_type) {
+        String result = "";
+        BufferedReader reader = null;
+        try {
+            HttpURLConnection httpURLConnection = null;
+            String url = "http://web.juhe.cn/constellation/getAll?consName=" + constellation + "&type=" + day_type + "&key=db87614e1e6901e2580bebafe428740d";
+            URL requestUrl = new URL(url);
+            httpURLConnection = (HttpURLConnection) requestUrl.openConnection();
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.setConnectTimeout(5000);
+            httpURLConnection.connect();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            StringBuilder builder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+                builder.append("\n");
+            }
+            if (builder.length() == 0) {
+                return null;
+            }
+            result = builder.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public static String doGetCons(String date) {
+        String result = "";
+        BufferedReader reader = null;
+        try {
+            HttpURLConnection httpURLConnection = null;
+            String url = "http://apis.juhe.cn/fapig/constellation/query?keyword=" + date + "&key=801a4db3c00e2046cb6039cb6321becf";
+            URL requestUrl = new URL(url);
+            httpURLConnection = (HttpURLConnection) requestUrl.openConnection();
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.setConnectTimeout(5000);
+            httpURLConnection.connect();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            StringBuilder builder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+                builder.append("\n");
+            }
+            if (builder.length() == 0) {
+                return null;
+            }
+            result = builder.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public static String doGetPair(String men, String women) {
+        String result = "";
+        BufferedReader reader = null;
+        try {
+            HttpURLConnection httpURLConnection = null;
+            String url = "https://apis.juhe.cn/xzpd/query?men=" + men + "&women=" + women + "&key=1a72994a81543695a1cb3bf59b073a6e";
+            URL requestUrl = new URL(url);
+            httpURLConnection = (HttpURLConnection) requestUrl.openConnection();
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.setConnectTimeout(5000);
+            httpURLConnection.connect();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            StringBuilder builder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+                builder.append("\n");
+            }
+            if (builder.length() == 0) {
+                return null;
+            }
+            result = builder.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+}
+package com.example.constellation;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+public class AlterActivity extends AppCompatActivity {
+    EditText password, age, constellation;
+    Button alter;
+    String DB_NAME = "userinfo.db";
+    MySQLiteOpenHelper helper;
+    SQLiteDatabase db;
+    @SuppressLint("MissingInflatedId")
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_alter); 
+        password = findViewById(R.id.password);
+        age = findViewById(R.id.age);
+        constellation = findViewById(R.id.constellation);
+        alter = findViewById(R.id.alter);
+        helper = new MySQLiteOpenHelper(this, DB_NAME, null, 1);
+        db = helper.getReadableDatabase(); 
+        UserInfo info = new UserInfo(db);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String str_username = bundle.getString("username");
+        alter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String str_password = password.getText().toString();
+                String str_age = age.getText().toString();
+                String str_constellation = constellation.getText().toString();
+                info.update(new User(str_username, str_password, str_age, str_constellation));
+                Intent intent = new Intent(AlterActivity.this, LoginActivity.class);
+                startActivity(intent);
+                Toast.makeText(AlterActivity.this, "修改成功,请重新登录", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+    <gradient
+        android:angle="270"
+        android:endColor="#8BC34A"
+        android:startColor="#FCD209" />
+    <padding
+        android:left="10dp"
+        android:top="0dp"
+        android:right="10dp"
+        android:bottom="2dp"/>
+    <corners
+        android:bottomLeftRadius="20px"
+        android:bottomRightRadius="20px"
+        android:topLeftRadius="20px"
+        android:topRightRadius="20px" />
+</shape>
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="270"
+        android:endColor="#FFEB3B"
+        android:startColor="#4CAF50" />
+    <corners
+        android:bottomLeftRadius="20px"
+        android:bottomRightRadius="20px"
+        android:topLeftRadius="20px"
+        android:topRightRadius="20px" />
+    <padding
+        android:bottom="3dp"
+        android:left="6dp"
+        android:right="8dp"
+        android:top="2dp" />
+</shape>
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#3DDC84"
+        android:pathData="M0,0h108v108h-108z" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M9,0L9,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,0L19,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M29,0L29,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M39,0L39,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M49,0L49,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M59,0L59,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M69,0L69,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M79,0L79,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M89,0L89,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M99,0L99,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,9L108,9"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,19L108,19"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,29L108,29"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,39L108,39"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,49L108,49"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,59L108,59"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,69L108,69"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,79L108,79"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,89L108,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,99L108,99"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,29L89,29"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,39L89,39"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,49L89,49"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,59L89,59"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,69L89,69"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,79L89,79"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M29,19L29,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M39,19L39,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M49,19L49,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M59,19L59,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M69,19L69,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M79,19L79,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+</vector>
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"
+    >
+    <stroke android:width="3dp" android:color="@color/colorPrimary"/>
+    <corners android:radius="10dp" />
+</shape>
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@color/colorPrimary"/>
+    <item android:state_pressed="false" android:drawable="@color/colorPrimaryDark"/>
+</selector>
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" >
+    <solid android:color="#EAFAD6" />
+    <stroke android:width="1dp"
+        android:color="#3C3F41" />
+    <corners android:radius="20dp"/>
+</shape>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/green_500</color>
+    <color name="colorPrimaryDark">@color/green_700</color>
+    <color name="colorAccent">#F4511E</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green_200">#C5E1A5</color>
+    <color name="green_500">#8BC34A</color>
+    <color name="green_700">#689F38</color>
+</resources>
+<resources>
+    <string name="app_name">MyApplicationBase</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources></resources>
+<resources>
+    <string-array name="day">
+        <item>今日</item>
+        <item>明日</item>
+        <item>一周</item>
+        <item>本月</item>
+        <item>今年</item>
+    </string-array>
+</resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.MyApplicationBase" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+</resources>
+<resources>
+    <string-array name="constellation_low">
+        <item>水瓶</item>
+        <item>双鱼</item>
+        <item>白羊</item>
+        <item>金牛</item>
+        <item>双子</item>
+        <item>巨蟹</item>
+        <item>狮子</item>
+        <item>处女</item>
+        <item>天秤</item>
+        <item>天蝎</item>
+        <item>射手</item>
+        <item>摩羯</item>
+    </string-array>
+</resources>
+<resources>
+    <string-array name="constellation">
+        <item>水瓶座</item>
+        <item>双鱼座</item>
+        <item>白羊座</item>
+        <item>金牛座</item>
+        <item>双子座</item>
+        <item>巨蟹座</item>
+        <item>狮子座</item>
+        <item>处女座</item>
+        <item>天秤座</item>
+        <item>天蝎座</item>
+        <item>射手座</item>
+        <item>摩羯座</item>
+    </string-array>
+</resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.MyApplicationBase" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyBtnStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/btn_bg_selector</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+    </style>
+    <style name="MyEditStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:background">@drawable/edit_text_bg</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:layout_height">50dp</item>
+    </style>
+    <style name="MyTextStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/green_200"
+    tools:context=".DayActivity">
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
+        <TextView
+            android:background="@drawable/title_bg"
+            android:text="今日运势"
+            android:textSize="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="日期" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_datetime"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="日期" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="星座" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_name"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="星座" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="速配星座" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_QFriend"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="速配星座" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="幸运颜色" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_color"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="幸运颜色" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="幸运数字" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_number"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="幸运数字" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="健康指数" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_health"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="健康指数" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="爱情指数" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_love"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="爱情指数" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="工作指数" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_work"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="工作指数" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="财富指数" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_money"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="财富指数" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="运势总结" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_summary"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="运势总结" />
+        <LinearLayout
+            android:layout_marginBottom="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="综合运势" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_all"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="综合运势" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green_200"
+    android:orientation="vertical"
+    tools:context=".ConsActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/title_bg"
+            android:text="星座查询"
+            android:textSize="50dp" />
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="日期" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_range"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="日期" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="星座" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_name"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="星座" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="星座特点" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_zxtd"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="星座特点" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="四象属性" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_sssx"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="四象属性" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="掌管宫位" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_zggw"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="掌管宫位" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="阴阳属性" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_yysx"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="阴阳属性" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="最大特征" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_zdtz"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="最大特征" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="主管行星" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_zgxx"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="主管行星" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="幸运颜色" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_xyys"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="幸运颜色" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="吉祥饰物" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_jssw"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="吉祥饰物" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="幸运号码" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_xyhm"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="幸运号码" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="开运金属" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_kyjs"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="开运金属" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="表现" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_bx"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="表现" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="优点" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_yd"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="优点" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="缺点" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_qd"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="缺点" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="基本特质" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_jbtz"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="基本特质" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="具体特质" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_jttz"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="具体特质" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="行事风格" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_xsfg"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="行事风格" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个性盲点" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_gxmd"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="个性盲点" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="总结" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_zj"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            tools:text="总结" />
+    </LinearLayout>
+</ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@color/colorPrimary"/>
+    <item android:state_pressed="false" android:drawable="@color/colorPrimaryDark"/>
+</selector>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/green_200"
+    tools:context=".AlterActivity"
+    >
+    <TextView
+        android:textStyle="bold"
+        android:background="@drawable/title_bg"
+        android:layout_width="200dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:text="修改信息"
+        android:textSize="30dp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        />
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/black"
+            android:paddingTop="2dp"
+            android:textSize="20dp"
+            android:text="密    码："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="请输入密码"
+            android:paddingLeft="10dp"
+            android:background="@drawable/background_text"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/black"
+            android:paddingTop="2dp"
+            android:textSize="20dp"
+            android:text="性    别："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/age"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="请输入性别"
+            android:paddingLeft="10dp"
+            android:background="@drawable/background_text"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/black"
+            android:paddingTop="2dp"
+            android:textSize="20dp"
+            android:text="星    座："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/constellation"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="请输入星座"
+            android:paddingLeft="10dp"
+            android:background="@drawable/background_text"
+            />
+    </LinearLayout>
+    <Button
+        android:textStyle="bold"
+        android:id="@+id/alter"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:text="修     改"
+        android:textSize="20dp"
+        android:backgroundTint="@android:color/holo_green_light"
+        />
+</LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"
+    >
+    <stroke android:width="3dp" android:color="@color/colorPrimary"/>
+    <corners android:radius="10dp" />
+</shape>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:pathData="M31,63.928c0,0 6.4,-11 12.1,-13.1c7.2,-2.6 26,-1.4 26,-1.4l38.1,38.1L107,108.928l-32,-1L31,63.928z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="85.84757"
+                android:endY="92.4963"
+                android:startX="42.9492"
+                android:startY="49.59793"
+                android:type="linear">
+                <item
+                    android:color="#44000000"
+                    android:offset="0.0" />
+                <item
+                    android:color="#00000000"
+                    android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="nonZero"
+        android:pathData="M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000" />
+</vector>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/green_200"
+    tools:context=".MonthActivity">
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
+        <TextView
+            android:background="@drawable/title_bg"
+            android:text="本月运势"
+            android:textSize="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="日期" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_date"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="日期" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="星座" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_name"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="星座" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="健康运势" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_health"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="健康运势" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="爱情运势" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_love"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="爱情运势" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="工作运势" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_work"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="工作运势" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="财富运势" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_money"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="财富运势" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="综合运势" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="50dp"
+            android:id="@+id/tv_all"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="综合运势" />
+    </LinearLayout>
+</ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green_200"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="30dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="10dp"
+            android:onClick="goUserInfo"
+            android:src="@drawable/userinfo" />
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/green_500"
+            android:calendarViewShown="false"
+            android:headerBackground="@color/green_700" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_bg"
+                android:text="生日"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:text="选择日期"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:onClick="start_cons"
+            android:text="查     询     星     座"
+            android:textAllCaps="false"
+            android:textSize="20dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_bg"
+                android:text="星座"
+                android:textColor="@color/black" />
+            <Spinner
+                android:id="@+id/sp_stars_cons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:entries="@array/constellation"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_bg"
+                android:text="日期"
+                android:textColor="@color/black" />
+            <Spinner
+                android:id="@+id/sp_stars"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:entries="@array/day"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:onClick="start"
+            android:text="查     询     运     势"
+            android:textAllCaps="false"
+            android:textSize="20dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_bg"
+                android:text="男方星座"
+                android:textColor="@color/black" />
+            <Spinner
+                android:id="@+id/sp_men"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:entries="@array/constellation_low"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_bg"
+                android:text="女方星座"
+                android:textColor="@color/black" />
+            <Spinner
+                android:id="@+id/sp_women"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:entries="@array/constellation_low"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:onClick="start_pair"
+            android:text="星     座     配     对"
+            android:textAllCaps="false"
+            android:textSize="20dp" />
+        <TextView
+            android:id="@+id/test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/green_200"
+    tools:context=".PairActivity">
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
+        <TextView
+            android:background="@drawable/title_bg"
+            android:text="星座配对"
+            android:textSize="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="南方星座" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_men"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="南方星座" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="女方星座" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_women"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="女方星座" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="配对指数" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_zhishu"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="配对指数" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="配对比重" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_bizhong"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="配对比重" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="两情相悦指数" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_xiangyue"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="两情相悦指数" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="天长地久指数" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_tcdj"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="天长地久指数" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="结果评述" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_jieguo"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="结果评述" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="恋爱建议" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_lianai"
+            style="@style/MyTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="恋爱建议" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="注意事项" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginBottom="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_zhuyi"
+            style="@style/MyTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="注意事项" />
+    </LinearLayout>
+</ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/green_200"
+    tools:context=".LoginActivity"
+    >
+    <TextView
+        android:textStyle="bold"
+        android:background="@drawable/title_bg"
+        android:layout_width="200dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:text="用  户  登  录"
+        android:textSize="30dp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        />
+    <ImageView
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/user" />
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/black"
+            android:paddingTop="2dp"
+            android:textSize="20dp"
+            android:text="用户名："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="请输入用户名"
+            android:paddingLeft="10dp"
+            android:background="@drawable/background_text"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/black"
+            android:paddingTop="2dp"
+            android:textSize="20dp"
+            android:text="密    码："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="请输入密码"
+            android:paddingLeft="10dp"
+            android:background="@drawable/background_text"
+            />
+    </LinearLayout>
+    <Button
+        android:textStyle="bold"
+        android:id="@+id/login"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:text="登     录"
+        android:textSize="20dp"
+        android:backgroundTint="@android:color/holo_green_light"
+        />
+    <Button
+        android:textStyle="bold"
+        android:textColor="@color/green_500"
+        android:id="@+id/register"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="注     册"
+        android:textSize="20dp"
+        android:backgroundTint="@android:color/white"
+        />
+</LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/green_200"
+    tools:context=".RegisterActivity"
+    >
+    <TextView
+        android:textStyle="bold"
+        android:background="@drawable/title_bg"
+        android:layout_width="200dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:text="用 户 注 册"
+        android:textSize="30dp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        />
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/black"
+            android:paddingTop="2dp"
+            android:textSize="20dp"
+            android:text="用户名："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="请输入用户名"
+            android:paddingLeft="10dp"
+            android:background="@drawable/background_text"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/black"
+            android:paddingTop="2dp"
+            android:textSize="20dp"
+            android:text="密    码："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="请输入密码"
+            android:paddingLeft="10dp"
+            android:background="@drawable/background_text"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/black"
+            android:paddingTop="2dp"
+            android:textSize="20dp"
+            android:text="性    别："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/age"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="请输入性别"
+            android:paddingLeft="10dp"
+            android:background="@drawable/background_text"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/black"
+            android:paddingTop="2dp"
+            android:textSize="20dp"
+            android:text="星    座："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/constellation"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="请输入星座"
+            android:paddingLeft="10dp"
+            android:background="@drawable/background_text"
+            />
+    </LinearLayout>
+    <Button
+        android:textStyle="bold"
+        android:id="@+id/register"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:text="注     册"
+        android:textSize="20dp"
+        android:backgroundTint="@android:color/holo_green_light"
+        />
+</LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green_200"
+    android:orientation="vertical"
+    tools:context=".YearActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/title_bg"
+            android:text="今年运势"
+            android:textSize="50dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textview_bg"
+                android:text="日期"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/tv_date"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                tools:text="日期" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textview_bg"
+                android:text="星座"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/tv_name"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                tools:text="星座" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textview_bg"
+                android:text="事业运势"
+                android:textColor="@color/black" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_career"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            tools:text="事业运势" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textview_bg"
+                android:text="爱情运势"
+                android:textColor="@color/black" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_love"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            tools:text="爱情运势" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textview_bg"
+                android:text="健康运势"
+                android:textColor="@color/black" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_health"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            tools:text="健康运势" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textview_bg"
+                android:text="财富运势"
+                android:textColor="@color/black" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_finance"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            tools:text="财富运势" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textview_bg"
+                android:text="短评"
+                android:textColor="@color/black" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_info"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            tools:text="短评" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textview_bg"
+                android:text="综合运势"
+                android:textColor="@color/black" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_text"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="50dp"
+            tools:text="综合运势" />
+    </LinearLayout>
+</ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/green_200"
+    tools:context=".WeekActivity">
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
+        <TextView
+            android:background="@drawable/title_bg"
+            android:text="一周运势"
+            android:textSize="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="日期" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:textSize="15dp"
+                android:id="@+id/tv_date"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="日期" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="星座" />
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_name"
+                style="@style/MyTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="星座" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="健康运势" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_health"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="健康运势" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="爱情运势" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_love"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="爱情运势" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="工作运势" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_work"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="工作运势" />
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
+            <TextView
+                android:background="@drawable/textview_bg"
+                android:textColor="@color/black"
+                style="@style/MyTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="财富运势" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginBottom="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_money"
+            style="@style/MyTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="财富运势" />
+    </LinearLayout>
+</ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green_200"
+    android:orientation="vertical"
+    tools:context=".UserInfoActivity">
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/title_bg"
+        android:gravity="center_horizontal"
+        android:text="个  人  信  息"
+        android:textColor="@color/black"
+        android:textSize="30dp"
+        android:textStyle="bold" />
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/user" />
+    <TextView
+        android:id="@+id/userinfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+    <Button
+        android:id="@+id/alter"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:text="修 改 信 息"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:text="退 出 登 录"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+    <Button
+        android:id="@+id/delete"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:text="注 销 账 户"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+</LinearLayout>
