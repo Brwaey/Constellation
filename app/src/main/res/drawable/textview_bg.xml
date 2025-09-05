@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 设置透明背景色 -->
+    <gradient
+        android:angle="270"
+        android:endColor="#FFEB3B"
+        android:startColor="#4CAF50" />
+
+    <!-- 设置一个黑色边框 -->
+
+    <!-- 设置四个圆角的半径 -->
+    <corners
+        android:bottomLeftRadius="20px"
+        android:bottomRightRadius="20px"
+        android:topLeftRadius="20px"
+        android:topRightRadius="20px" />
+    <!-- 设置一下边距,让空间大一点 -->
+    <padding
+        android:bottom="3dp"
+        android:left="6dp"
+        android:right="8dp"
+        android:top="2dp" />
+
+</shape>

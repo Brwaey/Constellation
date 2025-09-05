@@ -1,0 +1,9 @@
+<resources>
+    <string-array name="day">
+        <item>今日</item>
+        <item>明日</item>
+        <item>一周</item>
+        <item>本月</item>
+        <item>今年</item>
+    </string-array>
+</resources>
